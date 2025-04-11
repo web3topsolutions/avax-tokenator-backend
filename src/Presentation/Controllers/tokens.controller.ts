@@ -1,9 +1,9 @@
 // tokens/controllers/tokens.controller.ts
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
-import { CreateTokenCommand } from '../../Services/Tokens/UseCases/Commands/Impl/create-token.command';
-import { CreateTokenDto } from '../../Services/Tokens/Dtos/create-token.dto';
 import { ApiTags, ApiCreatedResponse, ApiBody } from '@nestjs/swagger';    
+import { CreateTokenDto } from '../../Services/Tokens/Dtos/create-token.dto';
+import { CreateTokenCommand } from '../../Services/Tokens/UseCases/Commands/Impl/create-token.command';
 //import { GetTokenBySymbolQuery } from '../queries/impl/get-token-by-symbol.query';
 
 @ApiTags('tokens')
@@ -16,7 +16,7 @@ export class TokensController {
 
   @Post()
   @ApiCreatedResponse({ description: 'Token criado com sucesso' })
-  //@ApiBody({ type: CreateTokenDto })
+  @ApiBody({ type: CreateTokenDto })
   async createToken(@Body() body: CreateTokenDto) {
     const { name, symbol, decimals, supply, description, image } = body;
 

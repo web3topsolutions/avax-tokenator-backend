@@ -11,7 +11,7 @@ export class SolanaService {
     description?: string;
     image?: string;
   }): Promise<any> {
-    // Aqui você integraria com a Solana via biblioteca ou API
+    // Aqui você integraria com a EVM via biblioteca ou API
     console.log('Criando token na Solana com:', data);
     return { success: true, txHash: 'abc123' };
   }
