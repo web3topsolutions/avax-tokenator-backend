@@ -2,8 +2,8 @@
 import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { TokensController } from '../../Presentation/Controllers/tokens.controller';
-import { SolanaService } from '../solana.service';
 import { CreateTokenHandler } from './UseCases/Commands/create-token.handler';
+import { SolanaService } from '../solana.service';
 //import { GetTokenBySymbolHandler } from './queries/handlers/get-token-by-symbol.handler';
 //import { TokenRepository } from './repositories/token.repository';
 

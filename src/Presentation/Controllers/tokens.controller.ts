@@ -18,10 +18,15 @@ export class TokensController {
   @ApiCreatedResponse({ description: 'Token criado com sucesso' })
   @ApiBody({ type: CreateTokenDto })
   async createToken(@Body() body: CreateTokenDto) {
-    const { name, symbol, decimals, supply, description, image } = body;
 
     return await this.commandBus.execute(
-      new CreateTokenCommand(name, symbol, decimals, supply, description, image),
+      new CreateTokenCommand(
+        body.name, 
+        body.symbol, 
+        body.decimals, 
+        body.supply, 
+        body.description, 
+        body.image),
     );
   }
 
