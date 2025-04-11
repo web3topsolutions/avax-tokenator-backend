@@ -26,7 +26,8 @@ export class TokensController {
         body.decimals, 
         body.supply, 
         body.description, 
-        body.image),
+        body.image
+      ),
     );
   }
 
