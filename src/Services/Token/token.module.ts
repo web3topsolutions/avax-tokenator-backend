@@ -1,7 +1,7 @@
 // tokens/token.module.ts
-import { Module } from '@nestjs/common';
+import { Logger, Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
-import { TokensController } from '../../Presentation/Controllers/tokens.controller';
+import { TokenController } from '../../Presentation/Controllers/token.controller';
 import { CreateTokenHandler } from './UseCases/Commands/create-token.handler';
 import { SolanaService } from '../solana.service';
 //import { GetTokenBySymbolHandler } from './queries/handlers/get-token-by-symbol.handler';
@@ -9,12 +9,13 @@ import { SolanaService } from '../solana.service';
 
 @Module({
   imports: [CqrsModule],
-  controllers: [TokensController],
+  controllers: [TokenController],
   providers: [
     SolanaService,
     //TokenRepository,
     CreateTokenHandler,
     //GetTokenBySymbolHandler,
+    Logger
   ],
 })
 export class TokenModule {}
