@@ -1,18 +1,13 @@
 // tokens/services/solana.service.ts
 import { Injectable } from '@nestjs/common';
 import { CreateTokenResponse } from '../domain/modules/crete-token-response';
-
+import { CreateTokenRequest } from '../domain/modules/create-token-request';
+import { IBaseService } from './ibase.service';
 @Injectable()
-export class BaseService {
-  async createToken(data: {
-    name: string;
-    symbol: string;
-    decimals: number;
-    supply: number;
-    description?: string;
-    image?: string;
-  }): Promise<CreateTokenResponse> {
-    // Aqui você integraria com a EVM via biblioteca ou API
+export class BaseService implements IBaseService {
+  // This service will handle the creation of tokens on the Base network
+  async createToken(data: CreateTokenRequest): Promise<CreateTokenResponse> {
+    // Here you would integrate with the Base network via a library or API
     console.log('Creating Token on Base', data);
 
     // Mocked response

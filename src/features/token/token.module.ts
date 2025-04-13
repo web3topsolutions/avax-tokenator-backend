@@ -12,6 +12,10 @@ import { BaseService } from './services/base.service';
   controllers: [TokenController],
   providers: [
     BaseService,
+    {
+      provide: 'IBaseService',
+      useClass: BaseService,
+    },
     //TokenRepository,
     CreateTokenHandler,
     //GetTokenBySymbolHandler,

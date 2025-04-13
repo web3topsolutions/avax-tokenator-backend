@@ -2,11 +2,11 @@
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { ApiTags, ApiCreatedResponse, ApiBody } from '@nestjs/swagger';    
-import { CreateTokenRequestDto } from '../../features/Token/dtos/create-token-request.dto';
-import { CreateTokenCommand } from '../../features/Token/domain/Commands/create-token/create-token.command';
+import { CreateTokenRequestDto } from '../../features/token/dtos/create-token-request.dto';
+import { CreateTokenCommand } from '../../features/token/domain/Commands/create-token/create-token.command';
 import { plainToClass } from 'class-transformer';
-import { CreateTokenResponse } from 'src/features/Token/domain/modules/crete-token-response';
-import { CreateTokenResponseDto } from '../../features/Token/dtos/create-token-response.dto';
+import { CreateTokenResponse } from 'src/features/token/domain/modules/crete-token-response';
+import { CreateTokenResponseDto } from '../../features/token/dtos/create-token-response.dto';
 //import { GetTokenBySymbolQuery } from '../queries/impl/get-token-by-symbol.query';
 
 @ApiTags('token')
