@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsNumber, IsString, IsUrl, MaxLength, Min } from 'class-validator';
 
-export class CreateTokenRequestDto {
+export class CreateTokenRequest {
   @ApiProperty({ example: 'Solana Coin', description: 'Nome do token' })
   @IsNotEmpty({ message: 'O nome do token não pode estar vazio.' })
   @IsString()

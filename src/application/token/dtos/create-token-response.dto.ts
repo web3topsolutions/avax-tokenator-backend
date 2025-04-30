@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 import { Type } from 'class-transformer';
 
-export class CreateTokenResponseDto {
+export class CreateTokenResponse {
   @ApiProperty({ example: 'TokenAccount123', description: 'Conta do token' })
   tokenAccount: string;
   @ApiProperty({ example: 1000, description: 'Quantidade de tokens' })
