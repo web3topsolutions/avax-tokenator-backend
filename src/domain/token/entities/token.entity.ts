@@ -1,4 +1,5 @@
 export class Token {
+    address: string;
     name: string;
     symbol: string;
     decimals: number;
@@ -7,6 +8,7 @@ export class Token {
     image: string;
 
     constructor(
+        address: string,
         name: string,
         symbol: string,
         decimals: number,
@@ -14,6 +16,7 @@ export class Token {
         description: string,
         image: string
     ) {
+        this.address = address;
         this.name = name;
         this.symbol = symbol;
         this.decimals = decimals;
