@@ -11,7 +11,6 @@ import { privateKeyToAccount } from 'viem/accounts';
 import { anvil } from 'viem/chains';
 
 import CreateTokenAbi from '../../application/token/abis/create-token.abi.json';
-import { TokenCreatedEvent } from 'src/domain/token/events/token-created.event';
 
 @Injectable()
 export class TokenService implements ITokenService {
