@@ -2,10 +2,10 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsNumber, IsString, IsUrl, MaxLength, Min } from 'class-validator';
 
 export class CreateTokenRequest {
-  @ApiProperty({ example: '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266', description: 'Wallet address' })
-  @IsNotEmpty({ message: 'Wallet address cannot be empty.' })
+  @ApiProperty({ example: '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266', description: 'Owner address' })
+  @IsNotEmpty({ message: 'Owner address cannot be empty.' })
   @IsString()
-  address: string;
+  ownerAddress: string;
 
   @ApiProperty({ example: 'RCH Token', description: 'Token name' })
   @IsNotEmpty({ message: 'Token name cannot be empty.' })
@@ -16,12 +16,6 @@ export class CreateTokenRequest {
   @IsNotEmpty({ message: 'The token symbol cannot be empty.' })
   @IsString()
   symbol: string;
-
-  @ApiProperty({ example: 9, description: 'Number of decimal places in the token' })
-  @IsNotEmpty({ message: 'The number of decimal places cannot be empty.' })
-  @IsNumber({}, { message: 'The number of decimal places must be an integer.' })
-  @Min(0, { message: 'The number of decimal places cannot be negative.' })
-  decimals: number;
 
   @ApiProperty({ example: 1000000, description: 'Initial amount of tokens to be created' })
   @IsNotEmpty({ message: 'The initial supply cannot be empty.' })

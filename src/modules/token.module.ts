@@ -4,6 +4,7 @@ import { CqrsModule } from '@nestjs/cqrs';
 import { TokenController } from '../presentation/controllers/token.controller';
 import { CreateTokenHandler } from '../application/token/commands/create-token/create-token.handler';
 import { TokenService } from '../infrastructure/services/token.service';
+import { AppConfigService } from 'src/shared/config/config.service';
 //import { GetTokenBySymbolHandler } from './queries/handlers/get-token-by-symbol.handler';
 //import { TokenRepository } from './repositories/token.repository';
 
@@ -19,7 +20,8 @@ import { TokenService } from '../infrastructure/services/token.service';
     //TokenRepository,
     CreateTokenHandler,
     //GetTokenBySymbolHandler,
-    Logger
+    Logger,
+    AppConfigService
   ],
 })
 export class TokenModule {}
