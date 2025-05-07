@@ -3,25 +3,31 @@ export class Token {
     tokenAddress: string;
     name: string;
     symbol: string;
-    supply: number;
-    description: string;
-    image: string;
+    initialSupply: number;
+    decimals: number;
+    burnable: boolean;
+    mintable: boolean;
+    verified: boolean;
 
     constructor(
         ownerAddress: string,
         tokenAddress: string,
         name: string,
         symbol: string,
-        supply: number,
-        description: string,
-        image: string
+        initialSupply: number,
+        decimals: number,
+        burnable: boolean = false,
+        mintable: boolean = false,
+        verified: boolean = false
     ) {
         this.ownerAddress = ownerAddress;
         this.tokenAddress = tokenAddress;
         this.name = name;
         this.symbol = symbol;
-        this.supply = supply;
-        this.description = description;
-        this.image = image;
+        this.initialSupply = initialSupply;
+        this.decimals = decimals;
+        this.burnable = burnable;
+        this.mintable = mintable;
+        this.verified = verified;
     }
 }

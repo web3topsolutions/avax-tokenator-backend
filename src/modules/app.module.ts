@@ -9,12 +9,8 @@ import { AppConfigModule } from '../modules/config.module'
 @Module({
   imports : [
     CqrsModule,
-    TokenModule, // Register the TokenModule here
-    AppConfigModule, // Uncomment if you have a config module
+    TokenModule,
+    AppConfigModule
   ]
-  
-  //imports: [],
-  //controllers: [AppController],
-  //providers: [AppService],
 })
 export class AppModule {}

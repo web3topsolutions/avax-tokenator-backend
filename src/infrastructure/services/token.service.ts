@@ -22,36 +22,31 @@ export class TokenService implements ITokenService {
   ) {}
   
   async createToken(request: CreateTokenCommand): Promise<Token> {
-
-    this.logger.log('Creating Token on Avalanche', request);
-
     const publicClient = this.createPublicClient();
     const walletClient = this.createWalletClient();
 
     try {
-      this.logger.log('Deploying token contract...');
+      this.logger.log('[CreateTokenHandler] Deploying token contract...');
+      this.logger.debug('[CreateTokenHandler] Using ABI:', JSON.stringify(CreateTokenAbi.abi, null, 2));
       const transactionHash = await this.deployToken(walletClient, request);
-      this.logger.debug('Using ABI:', JSON.stringify(CreateTokenAbi.abi, null, 2));
 
-      this.logger.log('Waiting for transaction receipt...');
+      this.logger.log('[CreateTokenHandler] Waiting for transaction receipt...');
       const receipt = await this.getTransactionReceipt(publicClient, transactionHash);
 
-      this.logger.log('Decoding transaction receipt...');
+      this.logger.log('[CreateTokenHandler] Decoding transaction receipt...');
       const decodedLog = this.decodeTokenCreatedEvent(receipt);
 
-      this.logger.log('Token created successfully');
       return new Token(
         request.ownerAddress,
         decodedLog.args && 'tokenAddress' in decodedLog.args ? String(decodedLog.args.tokenAddress) : '',
         request.name,
         request.symbol,
-        request.supply,
-        request.description,
-        request.image
+        request.initialSupply,
+        request.decimals
       );
 
     } catch (error) {
-      this.logger.error('Error creating token:', error.stack);
+      this.logger.error('[CreateTokenHandler] Error creating token:', error.stack);
       throw new Error('Failed to create token');
     }
   }
@@ -72,12 +67,11 @@ export class TokenService implements ITokenService {
   }
 
   private async deployToken(walletClient: WalletClient, request: CreateTokenCommand) {
-    const createTokenAbi = CreateTokenAbi.abi
     return await walletClient.writeContract({
       address: this.config.contractAddress,
-      abi: createTokenAbi,
+      abi: CreateTokenAbi.abi,
       functionName: 'createToken',
-      args: [request.ownerAddress, BigInt(request.supply), request.name, request.symbol],
+      args: [request.ownerAddress, BigInt(request.initialSupply), request.name, request.symbol],
       chain: anvil,
       account: privateKeyToAccount(this.config.privateKey)
     });
@@ -85,22 +79,21 @@ export class TokenService implements ITokenService {
 
   private decodeTokenCreatedEvent(receipt: TransactionReceipt) {
     try{
-    const createTokenAbi = CreateTokenAbi.abi
     const decodedLog = decodeEventLog({
-      abi: createTokenAbi,
+      abi: CreateTokenAbi.abi,
       data: receipt.logs[2].data,
       topics: receipt.logs[2].topics,
       strict: false
     });
 
     if (!decodedLog?.args || typeof decodedLog.args !== 'object') {
-      this.logger.error('Failed to decode event log or missing arguments');
+      this.logger.error('[CreateTokenHandler] Failed to decode event log or missing arguments');
       throw new Error('Failed to decode event log or missing arguments');
     }
 
     return decodedLog;
     } catch (error) {
-      console.error('Erro ao obter o receipt da transação:', error);
+      console.error('[CreateTokenHandler] Erro ao obter o receipt da transação:', error.stack);
       throw new Error('Failed to decode event log or missing arguments');
     }
   }
@@ -112,6 +105,7 @@ export class TokenService implements ITokenService {
     });
 
     if (!receipt.logs?.length) {
+      this.logger.error('[CreateTokenHandler] No logs found in transaction receipt');
       throw new Error('No logs found in transaction receipt');
     }
 
