@@ -1,11 +1,16 @@
 // tokens/controllers/tokens.controller.ts
-import { Body, Controller,  HttpCode, HttpStatus, Post, Logger } from '@nestjs/common';
-import { CommandBus } from '@nestjs/cqrs';
+import { Body, Controller,  HttpCode, HttpStatus, Post, Get, Logger, Param } from '@nestjs/common';
+import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { ApiTags, ApiOperation, ApiCreatedResponse, ApiBody, ApiResponse } from '@nestjs/swagger';    
 import { CreateTokenRequest } from '../../application/token/dtos/create-token-request.dto';
 import { CreateTokenCommand } from '../../application/token/commands/create-token/create-token.command';
 import { plainToClass } from 'class-transformer';
 import { CreateTokenResponse } from '../../application/token/dtos/create-token-response.dto';
+
+import { VerifyTokenRequest } from '../../application/token/dtos/verify-token-request.dto';
+import { VerifyTokenQuery } from '../../application/token/queries/verify-token/verify-token.query';
+import { VerifyTokenResponse } from '../../application/token/dtos/verify-token-response.dto';
+import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 
 @ApiTags('token')
 @Controller({
@@ -15,9 +20,11 @@ import { CreateTokenResponse } from '../../application/token/dtos/create-token-r
 export class TokenController {
   constructor(
     private readonly commandBus: CommandBus,
+    private readonly queryBus: QueryBus,    
     private readonly logger: Logger,
   ) {}
 
+  // Create Token
   @Post()
   @HttpCode(HttpStatus.CREATED)
   @ApiCreatedResponse({ 
@@ -75,4 +82,41 @@ export class TokenController {
     const createTokenResponse = await this.commandBus.execute<CreateTokenCommand, CreateTokenResponse>(createTokenCommand);
     return createTokenResponse;
   }
+
+  // Verify Token
+  @Get(':address/verify')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({
+    summary: 'Verifies the existence of a token contract',
+    description: 'Checks if there is a deployed contract at the given token address.',
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    type: VerifyTokenResponse,
+    description: 'Verification result',
+  })
+  @ApiResponse({
+    status: HttpStatus.BAD_REQUEST,
+    description: 'Invalid token address',
+    content: {
+      'application/json': {
+        examples: {
+          'Invalid address': {
+            value: {
+              statusCode: 400,
+              message: 'The token address provided is invalid.',
+              error: 'Bad Request',
+            },
+          },
+        },
+      },
+    },
+  })
+  async verifyToken(@Param('address') address: string): Promise<VerifyTokenResponse> {
+    this.logger.log(`Received request to verify token at address: ${address}`);
+    const verifyTokenQuery = new VerifyTokenQuery(address);
+    const verifyTokenResponse = await this.queryBus.execute<VerifyTokenQuery, VerifyTokenResponse>(verifyTokenQuery);
+    return verifyTokenResponse;
+  }
+  
 }
