@@ -1,7 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsNumber, IsString, IsUrl, MaxLength, Min } from 'class-validator';
+import { IsBoolean, IsOptional, IsNotEmpty, IsNumber, IsString, Min } from 'class-validator';
 
 export class CreateTokenRequest {
+  @ApiProperty({ example: '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266', description: 'Owner address' })
+  @IsNotEmpty({ message: 'Owner address cannot be empty.' })
+  @IsString()
+  ownerAddress: string;
+
   @ApiProperty({ example: 'RCH Token', description: 'Token name' })
   @IsNotEmpty({ message: 'Token name cannot be empty.' })
   @IsString()
@@ -12,23 +17,30 @@ export class CreateTokenRequest {
   @IsString()
   symbol: string;
 
-  @ApiProperty({ example: 9, description: 'Number of decimal places in the token' })
-  @IsNotEmpty({ message: 'The number of decimal places cannot be empty.' })
-  @IsNumber({}, { message: 'The number of decimal places must be an integer.' })
-  @Min(0, { message: 'The number of decimal places cannot be negative.' })
-  decimals: number;
-
-  @ApiProperty({ example: 1000000, description: 'Initial amount of tokens to be created' })
+  @ApiProperty({ example: 1000000, description: 'Initial supply of tokens to be created' })
   @IsNotEmpty({ message: 'The initial supply cannot be empty.' })
   @IsNumber({}, { message: 'The initial supply must be a number.' })
   @Min(1, { message: 'The initial supply must be at least 1.' })
-  supply: number;
+  initialSupply: number;
 
-  @ApiProperty({ example: 'A token for testing on the Avalanche blockchain', description: 'Token description', required: false })
-  @IsString()
-  description?: string;
+  @ApiProperty({ example: 18, description: 'Initial amount of tokens to be created' })
+  @IsNotEmpty({ message: 'The decimal cannot be empty.' })
+  @IsNumber({}, { message: 'The decimal must be a number.' })
+  @Min(1, { message: 'The decimal must be at least 1.' })
+  decimals: number;
 
-  @ApiProperty({ example: 'https://example.com/token.png', description: 'Token Image URL', required: false })
-  @IsUrl({}, { message: 'The image URL must be a valid URL.' })
-  image?: string;
+  @ApiProperty({ example: true, description: 'Whether the token is burnable or not', required: false, default: false })
+  @IsOptional()
+  @IsBoolean({ message: 'The burnable must be a boolean.' })
+  burnable: boolean = false;
+
+  @ApiProperty({ example: true, description: 'Whether the token is mintable or not', required: false, default: false })
+  @IsOptional()
+  @IsBoolean({ message: 'The mintable must be a boolean.' })
+  mintable: boolean = false;
+
+  @ApiProperty({ example: true, description: 'Whether or not the token source code will be verified', required: false, default: false })
+  @IsOptional()
+  @IsBoolean({ message: 'The verified must be a boolean.' })
+  verified: boolean = false;
 }

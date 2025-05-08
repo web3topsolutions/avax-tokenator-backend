@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { TokenModule } from './token.module'; // Import the TokenModule
+import { AppConfigModule } from '../modules/config.module'
 
 //import { AppController } from './app.controller';
 //import { AppService } from './app.service';
@@ -8,11 +9,8 @@ import { TokenModule } from './token.module'; // Import the TokenModule
 @Module({
   imports : [
     CqrsModule,
-    TokenModule, // Register the TokenModule here
-  ] // CqrsModule.forRoot() is used to initialize the CQRS module
-  
-  //imports: [],
-  //controllers: [AppController],
-  //providers: [AppService],
+    TokenModule,
+    AppConfigModule
+  ]
 })
 export class AppModule {}

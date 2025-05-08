@@ -1,98 +1,144 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Avalanche Token Creator API
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+[![NestJS](https://img.shields.io/badge/NestJS-10.0.0-E0234E.svg)](https://nestjs.com/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.0.0-3178C6.svg)](https://www.typescriptlang.org/)
+[![Solidity](https://img.shields.io/badge/Solidity-%5E0.8.27-363636.svg)](https://soliditylang.org/)
+[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](http://makeapullrequest.com)
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+A NestJS-based API service for creating ERC-20 tokens on the Avalanche network. This project follows Domain-Driven Design (DDD) principles and implements CQRS pattern.
 
-## Description
+// ...rest of the existing README content...
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Features
 
-## Project setup
+- Create custom ERC-20 tokens on local network (Anvil)
+- Configurable token parameters (name, symbol, supply, decimals)
+- Optional features: burnable, mintable tokens
+- Smart contract verification support
+- Swagger API documentation
 
+## Prerequisites
+
+- Node.js (>= 16.x)
+- npm or yarn
+- Foundry/Anvil for local blockchain
+- Solidity compiler
+
+## Project Setup
+
+1. Clone the repository:
 ```bash
-$ npm install
+git clone https://github.com/yourusername/avax-tokenator-backend.git
+cd avax-tokenator-backend
 ```
 
-## Compile and run the project
-
+2. Install dependencies:
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+npm install
 ```
 
-## Run tests
-
+3. Configure environment variables in `.env`:
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+RPC_URL=http://127.0.0.1:8545
+PRIVATE_KEY=0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80
+CONTRACT_ADDRESS=0x5FbDB2315678afecb367f032d93F642f64180aa3
 ```
 
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
-
+4. Start local blockchain (in a separate terminal):
 ```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+anvil
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+5. Deploy contracts (in a separate terminal):
+```bash
+cd smart-contracts
+forge script script/CreateToken.s.sol:CreateToken --rpc-url http://127.0.0.1:8545 --broadcast
+```
 
-## Resources
+## Running the Application
 
-Check out a few resources that may come in handy when working with NestJS:
+```bash
+# Development mode
+npm run start
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+# Watch mode
+npm run start:dev
 
-## Support
+# Production mode
+npm run start:prod
+```
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+## API Documentation
 
-## Stay in touch
+Once the application is running, access the Swagger documentation at:
+```
+http://localhost:3000/api
+```
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+### Create Token Endpoint
+
+POST /v1/tokens
+```json
+{
+  "ownerAddress": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+  "name": "RCH Token",
+  "symbol": "RHCT",
+  "initialSupply": 1000000,
+  "decimals": 18,
+  "burnable": false,
+  "mintable": false,
+  "verified": false
+}
+```
+
+## Project Structure
+
+```
+src/
+├── domain/              # Business logic and entities
+│   └── token/
+├── application/         # Use cases and application services
+│   └── token/
+│       ├── commands/    # CQRS commands
+│       ├── interfaces/  # Service interfaces
+│       └── dtos/       # Data transfer objects
+├── infrastructure/      # External services implementations
+│   └── services/
+├── presentation/        # API controllers
+│   └── controllers/
+└── shared/             # Shared utilities and configurations
+    └── config/
+
+smart-contracts/        # Solidity smart contracts
+├── src/
+│   ├── Token.sol       # ERC20 token implementation
+│   └── Factory.sol     # Token factory contract
+└── script/
+    └── CreateToken.s.sol  # Deployment script
+```
+
+## Testing
+
+```bash
+# Unit tests
+npm run test
+
+# E2E tests
+npm run test:e2e
+
+# Test coverage
+npm run test:cov
+```
+
+## Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
 ## License
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+This project is licensed under the MIT License - see the LICENSE file for details.
