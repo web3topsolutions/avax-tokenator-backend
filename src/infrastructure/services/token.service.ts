@@ -6,9 +6,10 @@ import { ITokenService } from '../../application/token/interfaces/itoken.service
 import { AppConfigService } from 'src/shared/config/config.service';
 
 import { createPublicClient, http, createWalletClient, type WalletClient, decodeEventLog, 
-  type TransactionReceipt, type PublicClient } from 'viem';
+  type TransactionReceipt, type PublicClient, 
+  Hex} from 'viem';
 import { privateKeyToAccount } from 'viem/accounts';
-import { anvil } from 'viem/chains';
+import { anvil, avalanche, avalancheFuji} from 'viem/chains';
 
 import CreateTokenAbi from '../../application/token/abis/create-token.abi.json';
 
@@ -36,6 +37,8 @@ export class TokenService implements ITokenService {
       this.logger.log('[CreateTokenHandler] Decoding transaction receipt...');
       const decodedLog = this.decodeTokenCreatedEvent(receipt);
 
+      //console.log('Decoded Log:', decodedLog);
+
       return new Token(
         request.ownerAddress,
         decodedLog.args && 'tokenAddress' in decodedLog.args ? String(decodedLog.args.tokenAddress) : '',
@@ -52,29 +55,46 @@ export class TokenService implements ITokenService {
   }
 
   private createPublicClient() {
+    //console.log('RPC URL:', this.config.rpcUrl);
+    
     return createPublicClient({
-      chain: anvil,
-      transport: http()
+      chain: avalancheFuji,
+      transport: http(this.config.rpcUrl) 
     });
   }
 
   private createWalletClient() {
+    //console.log('Private Key:', this.config.privateKey);
     const account = privateKeyToAccount(this.config.privateKey);
+    //console.log('Account:', account);
+    //console.log('RPC URL:', this.config.rpcUrl);
     return createWalletClient({
       account,
-      transport: http(this.config.rpcUrl)
+      transport: http(this.config.rpcUrl)     
     });
   }
 
   private async deployToken(walletClient: WalletClient, request: CreateTokenCommand) {
-    return await walletClient.writeContract({
-      address: this.config.contractAddress,
-      abi: CreateTokenAbi.abi,
-      functionName: 'createToken',
-      args: [request.ownerAddress, BigInt(request.initialSupply), request.name, request.symbol],
-      chain: anvil,
-      account: privateKeyToAccount(this.config.privateKey)
-    });
+    //console.log('Deploying token with the following parameters:');
+    //console.log('Calling walletClient.writeContract...');
+    console.log('PrivateKey:', this.config.privateKey);
+    try {
+      const txHash = await walletClient.writeContract({
+        address: this.config.contractAddress,
+        abi: CreateTokenAbi.abi,
+        functionName: 'createToken',
+        args: [request.ownerAddress, BigInt(request.initialSupply), request.name, request.symbol],
+        chain: avalancheFuji,
+        account: privateKeyToAccount(this.config.privateKey) 
+      });
+      //console.log('Transaction hash:', txHash);
+      return txHash;
+
+    } catch (error) {
+      console.error('Error in writeContract:', error);
+      throw error;
+    }
+    
   }
 
   private decodeTokenCreatedEvent(receipt: TransactionReceipt) {
@@ -103,6 +123,8 @@ export class TokenService implements ITokenService {
       hash,
       confirmations: 1,
     });
+
+    //console.log('Receipt logs:', receipt.logs);
 
     if (!receipt.logs?.length) {
       this.logger.error('[CreateTokenHandler] No logs found in transaction receipt');
