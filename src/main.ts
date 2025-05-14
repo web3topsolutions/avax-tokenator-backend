@@ -2,18 +2,14 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './modules/app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
-import serverlessExpress from '@codegenie/serverless-express';
-import { Handler, Context, Callback } from 'aws-lambda';
 
-let server: Handler;
-
-async function bootstrap(): Promise<Handler> {
+async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     logger: ['error', 'warn', 'debug', 'log', 'verbose'],
   });
 
   app.enableCors({
-    origin: ['http://18.188.14.52:3001/', 'https://your-frontend-domain.com/'],
+    origin: ['http://18.188.14.52:3001', 'https://your-frontend-domain.com'],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     credentials: true,
   });
@@ -35,13 +31,9 @@ async function bootstrap(): Promise<Handler> {
     }),
   );
 
-  await app.init(); // Importante para Vercel
-
-  const expressApp = app.getHttpAdapter().getInstance();
-  return serverlessExpress({ app: expressApp });
+  const port = process.env.PORT || 3000;
+  await app.listen(port);
+  console.log(`🚀 Server is running on http://localhost:${port}`);
 }
 
-export const handler: Handler = async (event: any, context: Context, callback: Callback) => {
-  server = server ?? (await bootstrap());
-  return server(event, context, callback);
-};
+bootstrap();
