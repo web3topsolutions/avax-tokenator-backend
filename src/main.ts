@@ -8,6 +8,12 @@ async function bootstrap() {
     logger: ['error', 'warn', 'debug', 'log', 'verbose'],
   });
 
+  app.enableCors({
+    origin: 'http://18.188.14.52:3001', // ou use uma array para múltiplas origens
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    credentials: true,
+  });
+
   const config = new DocumentBuilder() 
     .setTitle('Avalanche Token API')
     .setDescription('Avalanche token API')
