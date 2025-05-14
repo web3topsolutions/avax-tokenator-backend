@@ -2,7 +2,7 @@ import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { VerifyTokenQuery } from './verify-token.query';
 import { VerifyTokenResponse } from '../../dtos/verify-token-response.dto';
 import { createPublicClient, http } from 'viem';
-import { anvil, mainnet } from 'viem/chains';
+import { anvil, avalanche, avalancheFuji, mainnet } from 'viem/chains';
 
 @QueryHandler(VerifyTokenQuery)
 export class VerifyTokenHandler implements IQueryHandler<VerifyTokenQuery> {
@@ -10,8 +10,8 @@ export class VerifyTokenHandler implements IQueryHandler<VerifyTokenQuery> {
     const { tokenAddress } = query;   
 
     const client = createPublicClient({
-      chain: anvil,
-      transport: http(), // ou configure o endpoint do seu nó / provedor
+      chain: avalancheFuji,
+      transport: http('https://avax-fuji.g.alchemy.com/v2/rjiHSe1EPonp-yhcWKxc45Pf_KbCslyA'),             
     });
 
     try {
@@ -29,7 +29,7 @@ export class VerifyTokenHandler implements IQueryHandler<VerifyTokenQuery> {
         return { isVerified: false, message: 'No contract found at this address.' };
       }
     } catch (error) {
-      //console.error('Error verifying token:', error);      
+      console.error('Error verifying token:', error);      
       return { isVerified: false, message: `Error verifying token: ${error.message}` };
     }
   }
