@@ -9,7 +9,7 @@ async function bootstrap() {
   });
 
   app.enableCors({
-    origin: ['http://18.188.14.52:3001', 'https://your-frontend-domain.com'],
+    origin: ['http://18.188.14.52:3001', 'https://token-creator-rch.vercel.app'],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     credentials: true,
   });
